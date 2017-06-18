@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import {Icon,Table,Button,Popconfirm,message } from 'antd';
 import JSON from '../../Tools/Json';
-import rest from '../../../utils/rest';
-import db from '../../../config/data';
+import reqwest from 'reqwest';
 
 const ButtonGroup = Button.Group;
 const Reglist = React.createClass({
@@ -17,33 +16,30 @@ const Reglist = React.createClass({
      },
      getDetail(){
          let id = this.props.params.id ;
-         rest.ajax({
-             url: ajaxPath + `/address/${id}`,
-             cb:(data)=>{
-                 this.setState({
-                   detail: data.desc,
-                   requesting:false
-                 });
-             }
-         })
+         reqwest({
+           url: 'json/address_'+id+'.js',
+           type:'json',
+           method: 'GET'
+         }).then((data) => {
+             this.setState({
+                 detail: data.desc,
+                 requesting:false
+             });
+         });
 
      },
 
      getList(){
-         const id = this.props.params.id ;
-         const aurl = db.formatUrl('/addressitem?filter=addressId,eq,');
-
-         rest.ajax({
-               url: ajaxPath + `${aurl}${id}`,
-              cb:(data)=>{
-                  this.setState({
-                    courses: db.toRecords('addressitem',data),
-
-                  });
-              }
-          })
-
-
+         let id = this.props.params.id ;
+         reqwest({
+           url: 'json/addressitem_'+id+'.js',
+           type:'json',
+           method: 'GET'
+         }).then((data) => {
+             this.setState({
+               courses:data,
+             });
+         });
      },
      componentWillMount(){
          this.setState({
@@ -73,10 +69,10 @@ const Reglist = React.createClass({
             <div key="table" className="courseBox">
 
               {this.state.courses.filter((x)=>x.finished==0).map((k)=>
-                    
+
                   <dl key={`regBox_${k.id}`}>
                       <dt>禅修时间：<i>{`${k.beginDate.substr(5,2)}月${k.beginDate.substr(8,2)}日 ～ ${k.endDate.substr(5,2)}月${k.endDate.substr(8,2)}日`}</i>
-                      
+
                       </dt>
                       <dd>
                        <p>{k.desc}</p>
@@ -92,7 +88,7 @@ const Reglist = React.createClass({
 
                   </dl>
 
-                
+
 
               )}
 

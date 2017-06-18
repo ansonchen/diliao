@@ -4,13 +4,13 @@ module.exports = {
     sending: !1,
 
     maxNum:100,
-    
+
     rootObj:document.getElementById('root'),
-    
+
     _token:'',
-    
+
     setToken(cb){
-      
+
       let that = this;
 
       //const lt = localStorage._token;
@@ -84,11 +84,11 @@ module.exports = {
         if(this._token!==''){
             cb(this._token)
         }else{
-            
+
             this.getToken(cb);
-            
+
         }
-        
+
     },
 
     clearToken(){
@@ -118,7 +118,7 @@ module.exports = {
 
          let url = option.url.indexOf('?') >-1  ?  option.url + '&' : option.url + '/?';
          this.getCsrf((csrf)=>{
-        
+
                  reqwest({
                    url: url + 'csrf='+ csrf,
                    method: option.method || 'GET',
@@ -127,8 +127,21 @@ module.exports = {
                  }).then((data) => {
                      option.cb(data)
                  });
-        
+
          })
+    },
+    data2js(option){
+        reqwest({
+          url: '/buildjs.php',
+          method: 'POST',
+          data:{
+              name:option.name,
+              path:option.path,
+              data:option.data,
+          },
+        }).then((data) => {
+            option.cb(data)
+        });
     }
 
 }

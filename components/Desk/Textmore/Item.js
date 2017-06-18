@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import rest from '../../../utils/rest';
-import db from '../../../config/data';
-
+import reqwest from 'reqwest';
 
 const Textmore = React.createClass({
     getInitialState() {
@@ -17,21 +15,20 @@ const Textmore = React.createClass({
         id:'',
       };
      },
+
      getList(){
-
-         const id = this.props.id ;
-         const aurl = db.formatUrl('/textmore?filter=typeid,eq,');
-         rest.ajax({
-               url: ajaxPath + `${aurl}${id}`,
-              cb:(data)=>{
-                  this.setState({
-                    data: db.toRecords('textmore',data),
-                    requesting:false,
-                    ready:true
-                  });
-              }
-          })
-
+            const id = this.props.id ;
+            reqwest({
+              url: 'json/book_'+id+'.js',
+              type:'json',
+              method: 'GET'
+            }).then((data) => {
+                this.setState({
+                  data: data,
+                  requesting:false,
+                  ready:true
+                });
+            });
      },
 
      componentWillMount(){

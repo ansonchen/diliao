@@ -9,9 +9,9 @@ const Tablereg = React.createClass({
 
 
       render() {
-          console.log(this.props.params)
-        let id = this.props.params.id ;
-          
+         // console.log(this.props.params)
+         let id = this.props.params.id ;
+
           const aurl = db.formatUrl('/addressitem?filter=addressId,eq,');
 
         return (
@@ -19,6 +19,8 @@ const Tablereg = React.createClass({
             path={`${aurl}${id}`}
             params={this.props.params}
             router ={this.props.router}
+            buildPath='addressitem'
+            showBuild={true}
             btn={[['报名查看','regdbitem']]}
             columns = {[{
                         title: '课程类型及说明',

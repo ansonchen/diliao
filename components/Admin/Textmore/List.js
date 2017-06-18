@@ -15,6 +15,8 @@ const Textmorelist = React.createClass({
             path={`${aurl}${id}`}
             params={this.props.params}
             router ={this.props.router}
+            buildPath='book'
+            showBuild={true}
             columns = {[{
                         title: '名称',
                         dataIndex: 'name',

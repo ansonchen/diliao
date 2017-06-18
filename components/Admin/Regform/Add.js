@@ -22,6 +22,7 @@ let NormForm = React.createClass({
         return {
           activeKey: panes[0].key,
           panes,
+          resource:'',
           data:[],
           [`data0`]:[],
         };
@@ -74,6 +75,26 @@ let NormForm = React.createClass({
   },
 
 
+  buildjs(){
+
+      let id = this.props.params.id;
+      if(id==0){
+          return false;
+      }
+      let data = this.state.resource;
+      rest.data2js({
+          name:id+'.js',
+          path:'formreg',
+          data:JSON.stringify(data),
+          cb:(data)=>{
+               console.log(data)
+               message.success('成功');
+          }
+
+      });
+
+  },
+
   fetch() {
 
     let id = this.props.params.id ;
@@ -81,6 +102,10 @@ let NormForm = React.createClass({
     rest.ajax({
          url: ajaxPath +'/formreg/'+id,
         cb:(data)=>{
+
+            this.setState({
+              resource: data
+            });            
 
           //对数据进行处理
           let val = {
@@ -364,6 +389,8 @@ let NormForm = React.createClass({
           &nbsp;&nbsp;&nbsp;
            {copyBtn}
            &nbsp;&nbsp;&nbsp;
+            <Button onClick={this.buildjs}>生成静态</Button>
+             &nbsp;&nbsp;&nbsp;
           <Button type="ghost" onClick={this.handleReset}>重置</Button>
 
         </FormItem>

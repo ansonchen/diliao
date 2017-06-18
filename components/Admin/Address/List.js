@@ -12,8 +12,10 @@ const Tablereg = React.createClass({
 
         return (
             <List
-            path="/address"
+            path="/address?columns=id,name,creatTime"
             router ={this.props.router}
+            buildPath='address'
+            showBuild={true}
             btn={[['课程管理','addressitem']]}
             columns = {[{
                         title: '名称',

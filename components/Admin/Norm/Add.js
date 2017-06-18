@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import rest from '../../../utils/rest';
 import { Select, Radio, Checkbox, Button, DatePicker, TimePicker,Input, InputNumber, Form, Cascader, Icon,message } from 'antd';
-import Fulledit from '../../Tools/Fulledit'
+import Fulledit from '../../Tools/Fulledit';
+import JSON from '../../Tools/Json';
 import db from '../../../config/data';
 const Option = Select.Option;
 const RadioGroup = Radio.Group;
@@ -17,12 +18,33 @@ let NormForm = React.createClass({
       return {
         fullText: '',
         name:'',
+        resource:'',
       }
     },
 
   handleReset(e) {
     e.preventDefault();
     this.props.form.resetFields();
+  },
+
+  buildjs(){
+
+      let id = this.props.params.id;
+      if(id==0){
+          return false;
+      }
+      let data = this.state.resource;
+      rest.data2js({
+          name:id+'.js',
+          path:'norm',
+          data:JSON.stringify(data),
+          cb:(data)=>{
+               console.log(data)
+               message.success('成功');
+          }
+
+      });
+
   },
 
   fetch() {
@@ -34,8 +56,9 @@ let NormForm = React.createClass({
          cb:(data)=>{
             console.log(data.name)
             this.setState({
-            fullText: data.body,
-            name: data.name,
+                fullText: data.body,
+                name: data.name,
+                resource:data,
             })
         }
     })
@@ -138,6 +161,8 @@ let NormForm = React.createClass({
           wrapperCol={{ span:20, offset: 4 }}
         >
           <Button type="primary" onClick={this.handleSubmit}>确定</Button>
+          &nbsp;&nbsp;&nbsp;
+          <Button onClick={this.buildjs}>生成静态</Button>
           &nbsp;&nbsp;&nbsp;
           <Button type="ghost" onClick={this.handleReset}>重置</Button>
         </FormItem>

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import {Alert,Icon,Row,Col,Button,message,Select, Checkbox,Radio,Form,Input,Upload,DatePicker,Switch  } from 'antd';
 import JSON from '../../Tools/Json';
 import rest from '../../../utils/rest';
+import reqwest from 'reqwest';
 import db from '../../../config/data';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -29,33 +30,36 @@ const Regitem = React.createClass({
      },
       //取条款
      getNorm(nid){
-         rest.ajax({
-              url: ajaxPath + `/norm/${nid}`,
-              cb:(data)=>{
-                  this.setState({
-                    normBody: data.body,
-                    normBodyOk:true,
-                  });
-              }
-          })
+
+         reqwest({
+           url: 'json/norm_'+nid+'.js',
+           type:'json',
+           method: 'GET'
+         }).then((data) => {
+             this.setState({
+                 normBody: data.body,
+                 normBodyOk:true,
+             });
+         });
+
      },
      //取详细报名表
      getList(){
          const {itemid,id,detailid} = this.props.params ;
-         rest.ajax({
-              url: ajaxPath + `/formreg/${id}`,
-              cb:(data)=>{
-                  this.getNorm(data.normId);
-                  const pages = JSON.parse(data.pages);
-                  this.setState({
-                     pages,
-                     personId:data.forFormPersonId,
-                     itemId:itemid,
-                     detailid:detailid
-                  })
-              }
-          })
-
+         reqwest({
+           url: 'json/formreg_'+id+'.js',
+           type:'json',
+           method: 'GET'
+         }).then((data) => {
+             this.getNorm(data.normId);
+             const pages = JSON.parse(data.pages);
+             this.setState({
+                pages,
+                personId:data.forFormPersonId,
+                itemId:itemid,
+                detailid:detailid
+             })
+         });
      },
 
      scrollToTop(){
@@ -64,7 +68,7 @@ const Regitem = React.createClass({
          },200);
      },
 
-     //取条款
+     //判断是否已停止报名
     getDetailItem(){
 
         const {itemid,id,detailid} = this.props.params ;

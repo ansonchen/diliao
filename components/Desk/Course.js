@@ -5,6 +5,7 @@ import '../../style/index.css';
 import { Layout, Menu, Breadcrumb, Icon,Table } from 'antd';
 import rest from '../../utils/rest';
 import db from '../../config/data';
+import reqwest from 'reqwest';
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -22,13 +23,13 @@ const AddressMenu = React.createClass({
   },
 
   ajax() {
-      rest.ajax({
-          url: ajaxPath +'/address/',
-          cb:(data)=>{
-              this.setState({data:db.toRecords('address',data)});
-          }
-      })
-
+      reqwest({
+        url: 'json/address_json.js',
+        type:'json',
+        method: 'GET'
+      }).then((data) => {
+          this.setState({data:data});
+      });
   },
 
   loadMenu() {

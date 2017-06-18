@@ -5,6 +5,7 @@ import {Icon,Table,Button,Popconfirm,message } from 'antd';
 const ButtonGroup = Button.Group;
 import rest from '../../utils/rest';
 import db from '../../config/data';
+import JSON from './Json';
 
 const List = React.createClass({
 
@@ -12,6 +13,8 @@ const List = React.createClass({
       return {
         path:'',
         params:'',
+        buildPath:'',
+        showBuild:false,
         btn:[],
         columns:[],
       };
@@ -60,6 +63,27 @@ const List = React.createClass({
         });
 
       },
+
+      buildData() {
+
+         let data = this.state.data;
+         let id = this.props.params.id || 'json';
+
+
+         rest.data2js({
+             name:id+'.js',
+             path:this.props.buildPath,
+             data:JSON.stringify(data),
+             cb:(data)=>{
+                  console.log(data)
+                  message.success('成功');
+             }
+
+         });
+
+
+
+      },
       fetch(params = {}) {
 
         console.log('params:', params);
@@ -73,6 +97,7 @@ const List = React.createClass({
              },
             cb:(data)=>{
               const records = db.toRecords(path,data);
+
                // console.log(data)
 
               const pagination = this.state.pagination;
@@ -132,6 +157,10 @@ const List = React.createClass({
             <div>
             <div className="optionBar">
             <Button type="primary" onClick={this.linkTo}>添加</Button>
+            {this.props.showBuild ?
+                <Button onClick={this.buildData} style={{marginLeft:10}}>生成静态</Button>
+                :''
+            }
             </div>
               <Table columns={columns}
                 rowKey={record => record.id}
