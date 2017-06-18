@@ -1,0 +1,22 @@
+
+html, body, #root {
+background-color: #ececec;
+  height: 100%;
+}
+a.block{
+    display: block;
+}
+.loginBox{
+    width:600px;
+    height:400px;
+    position: absolute;
+    top:0;
+    right:0;
+    bottom:0;
+    left:0;
+    margin:auto;
+    border-radius: 8px;
+    border: 10px solid rgba(255,255,255,0.5);
+    background: white;
+    background-clip: padding-box;
+}
